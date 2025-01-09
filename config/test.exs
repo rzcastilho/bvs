@@ -10,6 +10,10 @@ config :bvs, BVS.Repo,
   pool_size: 5,
   pool: Ecto.Adapters.SQL.Sandbox
 
+config :bvs, Oban,
+  testing: :inline,
+  notifier: Oban.Notifiers.PG
+
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :bvs, BVSWeb.Endpoint,
@@ -32,3 +36,10 @@ config :phoenix, :plug_init_mode, :runtime
 config :phoenix_live_view,
   # Enable helpful, but potentially expensive runtime checks
   enable_expensive_runtime_checks: true
+
+config :bvs, :sftp,
+  host: "localhost",
+  port: 9022,
+  user: "user",
+  password: "pass",
+  sftp_vsn: 3

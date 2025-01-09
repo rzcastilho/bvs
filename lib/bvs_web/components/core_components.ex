@@ -673,4 +673,61 @@ defmodule BVSWeb.CoreComponents do
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
+
+  @doc """
+  Renders a...
+
+  ## Examples
+
+      <.badge_status status={:found}/>
+  """
+  attr :status, :atom, required: true
+
+  def badge_status(assigns) do
+    ~H"""
+    <div>
+      <span class={[
+        "inline-flex items-center justify-center rounded-full px-2.5 py-0.5",
+        @status == :found && "bg-gray-100 text-gray-700",
+        @status == :downloaded && "bg-teal-100 text-teal-700",
+        @status == :processed && "bg-blue-100 text-blue-700",
+        @status == :reviewed && "bg-green-100 text-green-700",
+        @status == :pending && "bg-yellow-100 text-yellow-700",
+        @status == :error && "bg-red-100 text-red-700"
+      ]}>
+        <p class="whitespace-nowrap text-sm">
+          <%= @status %>
+        </p>
+      </span>
+    </div>
+    """
+  end
+
+  @doc """
+  Renders a...
+
+  ## Examples
+
+      <.badge label={@amount}/>
+      <.badge label={budget} color={:blue}/>
+  """
+  attr :label, :string, required: true
+  attr :color, :atom, values: [:blue, :green, :yellow, :red, :orange], default: :orange
+
+  def badge(assigns) do
+    ~H"""
+    <span class={[
+      "inline-flex items-center justify-center rounded-full px-2.5 py-0.5",
+      @color == :blue && "bg-blue-100 text-blue-700",
+      @color == :green && "bg-green-100 text-green-700",
+      @color == :yellow && "bg-yellow-100 text-yellow-700",
+      @color == :orange && "bg-orange-100 text-orange-700",
+      @color == :red && "bg-red-100 text-red-700"
+    ]}>
+      <p class="whitespace-nowrap text-sm">
+        <%= @label %>
+      </p>
+    </span>
+    """
+  end
 end

@@ -10,10 +10,8 @@ defmodule BVS.Application do
     children = [
       BVSWeb.Telemetry,
       BVS.Repo,
-      {Ecto.Migrator,
-        repos: Application.fetch_env!(:bvs, :ecto_repos),
-        skip: skip_migrations?()},
-      {DNSCluster, query: Application.get_env(:bvs, :dns_cluster_query) || :ignore},
+      {BVS.FTPServer, Application.get_env(:bvs, :sftp)},
+      {Oban, Application.fetch_env!(:bvs, Oban)},
       {Phoenix.PubSub, name: BVS.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: BVS.Finch},
@@ -35,10 +33,5 @@ defmodule BVS.Application do
   def config_change(changed, _new, removed) do
     BVSWeb.Endpoint.config_change(changed, removed)
     :ok
-  end
-
-  defp skip_migrations?() do
-    # By default, sqlite migrations are run when using a release
-    System.get_env("RELEASE_NAME") != nil
   end
 end

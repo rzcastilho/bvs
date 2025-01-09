@@ -1,0 +1,28 @@
+<.header>
+  Return file <%= @return_file.id %>
+  <:subtitle>This is a return_file record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/return_files/#{@return_file}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit return_file</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @return_file.name %></:item>
+  <:item title="Status"><%= @return_file.status %></:item>
+  <:item title="Notes"><%= @return_file.notes %></:item>
+</.list>
+
+<.back navigate={~p"/return_files"}>Back to return_files</.back>
+
+<.modal :if={@live_action == :edit} id="return_file-modal" show on_cancel={JS.patch(~p"/return_files/#{@return_file}")}>
+  <.live_component
+    module={BVSWeb.ReturnFileLive.FormComponent}
+    id={@return_file.id}
+    title={@page_title}
+    action={@live_action}
+    return_file={@return_file}
+    patch={~p"/return_files/#{@return_file}"}
+  />
+</.modal>

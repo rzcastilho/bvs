@@ -9,7 +9,8 @@ defmodule BVS.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      releases: releases()
     ]
   end
 
@@ -18,8 +19,8 @@ defmodule BVS.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {BVS.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      mod: {BVS, []},
+      extra_applications: [:logger, :runtime_tools, :do_it]
     ]
   end
 
@@ -56,8 +57,13 @@ defmodule BVS.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
-      {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.2"}
+      {:bandit, "~> 1.2"},
+      {:sftp_client, "~> 2.0"},
+      {:oban, "~> 2.17"},
+      {:do_it, "~> 0.6.1"},
+      {:req, "~> 0.5", override: true},
+      {:burrito, "~> 1.1"},
+      {:prompt, "~> 0.10.0"}
     ]
   end
 
@@ -79,6 +85,23 @@ defmodule BVS.MixProject do
         "tailwind bvs --minify",
         "esbuild bvs --minify",
         "phx.digest"
+      ]
+    ]
+  end
+
+  def releases do
+    [
+      bvs: [
+        steps: [:assemble, &Burrito.wrap/1],
+        burrito: [
+          targets: [
+            macos: [os: :darwin, cpu: :x86_64],
+            macos_m1: [os: :darwin, cpu: :aarch64],
+            linux: [os: :linux, cpu: :x86_64],
+            linux_aarch64: [os: :linux, cpu: :aarch64],
+            windows: [os: :windows, cpu: :x86_64]
+          ]
+        ]
       ]
     ]
   end

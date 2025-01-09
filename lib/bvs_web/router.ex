@@ -18,6 +18,35 @@ defmodule BVSWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    live "/return_codes", ReturnCodeLive.Index, :index
+    live "/return_codes/new", ReturnCodeLive.Index, :new
+    live "/return_codes/:id/edit", ReturnCodeLive.Index, :edit
+
+    live "/return_codes/:id", ReturnCodeLive.Show, :show
+    live "/return_codes/:id/show/edit", ReturnCodeLive.Show, :edit
+
+    live "/return_files", ReturnFileLive.Index, :index
+    live "/return_files/new", ReturnFileLive.Index, :new
+    live "/return_files/:id/edit", ReturnFileLive.Index, :edit
+    live "/return_files/:id/errors", ReturnFileLive.Index, :errors
+
+    live "/return_files/:id", ReturnFileLive.Show, :show
+    live "/return_files/:id/show/edit", ReturnFileLive.Show, :edit
+
+    live "/ocurrence_types", OcurrenceTypeLive.Index, :index
+    live "/ocurrence_types/new", OcurrenceTypeLive.Index, :new
+    live "/ocurrence_types/:id/edit", OcurrenceTypeLive.Index, :edit
+
+    live "/ocurrence_types/:id", OcurrenceTypeLive.Show, :show
+    live "/ocurrence_types/:id/show/edit", OcurrenceTypeLive.Show, :edit
+
+    live "/items", ItemLive.Index, :index
+    live "/items/new", ItemLive.Index, :new
+    live "/items/:id/edit", ItemLive.Index, :edit
+
+    live "/items/:id", ItemLive.Show, :show
+    live "/items/:id/show/edit", ItemLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

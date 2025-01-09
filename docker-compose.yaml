@@ -1,0 +1,8 @@
+services:
+  sftp:
+    image: atmoz/sftp
+    volumes:
+      - $PWD/tmp/upload:/home/user/negativacao/retorno
+    ports:
+      - "9022:22"
+    command: user:pass:1001

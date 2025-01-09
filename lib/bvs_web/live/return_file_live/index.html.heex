@@ -1,0 +1,67 @@
+<.header>
+  Listing Return files
+</.header>
+
+<div class="flex flex-col">
+  <div class="flex justify-end"><p>Show errors list <.icon name="hero-exclamation-circle" /></p></div>
+  <div class="flex justify-end"><p>Mark file as <.badge_status status={:reviewed}/> <.icon name="hero-check-circle" /></p></div>
+  <div class="flex justify-end"><p>Mark file as <.badge_status status={:pending}/> <.icon name="hero-receipt-refund" /></p></div>
+</div>
+
+<.table
+  id="return_files"
+  rows={@streams.return_files}
+  row_click={fn {_id, return_file} -> JS.navigate(~p"/return_files/#{return_file}") end}
+>
+  <:col :let={{_id, return_file}} label="Timestamp"><%= BVS.Helpers.timestamp_from_filename(return_file.name) %></:col>
+  <:col :let={{_id, return_file}} label="Filename"><%= return_file.name %></:col>
+  <:col :let={{_id, return_file}} label="Status"><.badge_status status={return_file.status}/></:col>
+  <:col :let={{_id, return_file}} label="Errors"><%= Enum.count(return_file.items) %></:col>
+  <:action :let={{_id, return_file}}>
+    <.link :if={Enum.count(return_file.items) > 0} patch={~p"/return_files/#{return_file}/errors"}>
+      <.icon name="hero-exclamation-circle" />
+    </.link>
+  </:action>
+  <:action :let={{_id, return_file}}>
+    <.link
+      :if={Enum.count(return_file.items) > 0 && return_file.status == :pending}
+      phx-click={JS.push("reviewed", value: %{id: return_file.id})}
+      data-confirm="Mark file as reviewed. Are you sure?"
+    >
+      <.icon name="hero-check-circle" />
+    </.link>
+  </:action>
+  <:action :let={{_id, return_file}}>
+    <.link
+      :if={Enum.count(return_file.items) > 0 && return_file.status == :reviewed}
+      phx-click={JS.push("pending", value: %{id: return_file.id})}
+      data-confirm="Mark file as pending. Are you sure?"
+    >
+      <.icon name="hero-receipt-refund" />
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="return_file-modal" show on_cancel={JS.patch(~p"/return_files")}>
+  <.live_component
+    module={BVSWeb.ReturnFileLive.FormComponent}
+    id={@return_file.id || :new}
+    title={@page_title}
+    action={@live_action}
+    return_file={@return_file}
+    patch={~p"/return_files"}
+  />
+</.modal>
+
+<.modal :if={@live_action in [:errors]} id="errors-modal" show on_cancel={JS.patch(~p"/return_files")}>
+  <.live_component
+    module={BVSWeb.ReturnFileLive.ErrorsComponent}
+    id={@return_file.id}
+    title={@page_title}
+    action={@live_action}
+    return_file={@return_file}
+    errors={@errors}
+    patch={~p"/return_files"}
+  />
+</.modal>
+

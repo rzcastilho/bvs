@@ -1,0 +1,42 @@
+<.header>
+  Listing Return codes
+  <:actions>
+    <.link patch={~p"/return_codes/new"}>
+      <.button>New Return code</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="return_codes"
+  rows={@streams.return_codes}
+  row_click={fn {_id, return_code} -> JS.navigate(~p"/return_codes/#{return_code}") end}
+>
+  <:col :let={{_id, return_code}} label="Code"><%= return_code.code %></:col>
+  <:col :let={{_id, return_code}} label="Description"><%= return_code.description %></:col>
+  <:action :let={{_id, return_code}}>
+    <div class="sr-only">
+      <.link navigate={~p"/return_codes/#{return_code}"}>Show</.link>
+    </div>
+    <.link patch={~p"/return_codes/#{return_code}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, return_code}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: return_code.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="return_code-modal" show on_cancel={JS.patch(~p"/return_codes")}>
+  <.live_component
+    module={BVSWeb.ReturnCodeLive.FormComponent}
+    id={@return_code.id || :new}
+    title={@page_title}
+    action={@live_action}
+    return_code={@return_code}
+    patch={~p"/return_codes"}
+  />
+</.modal>

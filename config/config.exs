@@ -7,6 +7,10 @@
 # General application configuration
 import Config
 
+config :do_it, DoIt.Commfig,
+  dirname: System.tmp_dir(),
+  filename: "bvs.json"
+
 config :bvs,
   namespace: BVS,
   ecto_repos: [BVS.Repo],

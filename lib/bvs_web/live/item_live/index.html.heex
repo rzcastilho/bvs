@@ -1,0 +1,45 @@
+<.header>
+  Listing Items
+  <:actions>
+    <.link patch={~p"/items/new"}>
+      <.button>New Item</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="items"
+  rows={@streams.items}
+  row_click={fn {_id, item} -> JS.navigate(~p"/items/#{item}") end}
+>
+  <:col :let={{_id, item}} label="Sequence"><%= item.sequence %></:col>
+  <:col :let={{_id, item}} label="Type"><%= item.type %></:col>
+  <:col :let={{_id, item}} label="Document type"><%= item.document_type %></:col>
+  <:col :let={{_id, item}} label="Document"><%= item.document %></:col>
+  <:col :let={{_id, item}} label="Return Code"><%= item.return_code.code %></:col>
+  <:action :let={{_id, item}}>
+    <div class="sr-only">
+      <.link navigate={~p"/items/#{item}"}>Show</.link>
+    </div>
+    <.link patch={~p"/items/#{item}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, item}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: item.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="item-modal" show on_cancel={JS.patch(~p"/items")}>
+  <.live_component
+    module={BVSWeb.ItemLive.FormComponent}
+    id={@item.id || :new}
+    title={@page_title}
+    action={@live_action}
+    item={@item}
+    patch={~p"/items"}
+  />
+</.modal>

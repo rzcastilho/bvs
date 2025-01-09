@@ -7,6 +7,11 @@ config :bvs, BVS.Repo,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true
 
+config :bvs, Oban,
+  engine: Oban.Engines.Lite,
+  queues: [default: 10],
+  repo: BVS.Repo
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
@@ -80,3 +85,10 @@ config :phoenix_live_view,
 
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
+
+config :bvs, :sftp,
+  host: "localhost",
+  port: 9022,
+  user: "user",
+  password: "pass",
+  sftp_vsn: 3

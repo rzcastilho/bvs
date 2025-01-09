@@ -1,0 +1,27 @@
+<.header>
+  Ocurrence type <%= @ocurrence_type.id %>
+  <:subtitle>This is a ocurrence_type record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/ocurrence_types/#{@ocurrence_type}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit ocurrence_type</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Code"><%= @ocurrence_type.code %></:item>
+  <:item title="Description"><%= @ocurrence_type.description %></:item>
+</.list>
+
+<.back navigate={~p"/ocurrence_types"}>Back to ocurrence_types</.back>
+
+<.modal :if={@live_action == :edit} id="ocurrence_type-modal" show on_cancel={JS.patch(~p"/ocurrence_types/#{@ocurrence_type}")}>
+  <.live_component
+    module={BVSWeb.OcurrenceTypeLive.FormComponent}
+    id={@ocurrence_type.id}
+    title={@page_title}
+    action={@live_action}
+    ocurrence_type={@ocurrence_type}
+    patch={~p"/ocurrence_types/#{@ocurrence_type}"}
+  />
+</.modal>

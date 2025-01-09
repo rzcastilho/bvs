@@ -1,0 +1,42 @@
+<.header>
+  Listing Ocurrence types
+  <:actions>
+    <.link patch={~p"/ocurrence_types/new"}>
+      <.button>New Ocurrence type</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="ocurrence_types"
+  rows={@streams.ocurrence_types}
+  row_click={fn {_id, ocurrence_type} -> JS.navigate(~p"/ocurrence_types/#{ocurrence_type}") end}
+>
+  <:col :let={{_id, ocurrence_type}} label="Code"><%= ocurrence_type.code %></:col>
+  <:col :let={{_id, ocurrence_type}} label="Description"><%= ocurrence_type.description %></:col>
+  <:action :let={{_id, ocurrence_type}}>
+    <div class="sr-only">
+      <.link navigate={~p"/ocurrence_types/#{ocurrence_type}"}>Show</.link>
+    </div>
+    <.link patch={~p"/ocurrence_types/#{ocurrence_type}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, ocurrence_type}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: ocurrence_type.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="ocurrence_type-modal" show on_cancel={JS.patch(~p"/ocurrence_types")}>
+  <.live_component
+    module={BVSWeb.OcurrenceTypeLive.FormComponent}
+    id={@ocurrence_type.id || :new}
+    title={@page_title}
+    action={@live_action}
+    ocurrence_type={@ocurrence_type}
+    patch={~p"/ocurrence_types"}
+  />
+</.modal>
