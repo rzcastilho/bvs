@@ -60,10 +60,10 @@ defmodule BVS.MixProject do
       {:bandit, "~> 1.2"},
       {:sftp_client, "~> 2.0"},
       {:oban, "~> 2.17"},
-      {:do_it, "~> 0.6.1"},
+      {:do_it, "~> 0.7.0"},
       {:req, "~> 0.5", override: true},
-      {:burrito, "~> 1.1"},
-      {:prompt, "~> 0.10.0"}
+      {:burrito, "~> 1.5"},
+      {:prompt, "~> 0.10"}
     ]
   end
 
